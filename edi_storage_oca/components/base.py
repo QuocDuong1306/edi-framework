@@ -67,7 +67,11 @@ class EDIStorageComponentMixin(AbstractComponent):
             # TODO: support match via pattern (eg: filename-prefix-*)
             # otherwise is impossible to retrieve input files and acks
             # (the date will never match)
-            return utils.get_file(self.storage, path.as_posix(), binary=binary)
+            data = utils.get_file(self.storage, path.as_posix(), binary=binary)
+            if not data:
+                raise ValueError("The file is empty to be retrieved")
+            return data
+
         except FileNotFoundError:
             _logger.info(
                 "Ignored FileNotFoundError when trying "
